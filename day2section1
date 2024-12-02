@@ -1,0 +1,48 @@
+import sys
+file1 = open("input.txt", "r") 
+data=file1.readlines()
+
+safeCnt = 0
+maintainSeq = False
+
+for line in data:
+    dataArray=line.strip().split(' ')
+    datalist = [ int(x) for x in dataArray] 
+
+    for i in range(len(datalist)-1):
+        diff = datalist[i] - datalist[i+1]
+
+        if i == 0:
+           if diff < 0 and diff > -4:
+              label = 'INCREASE'
+           elif diff > 0 and diff < 4:
+              label = "DECREASE"
+           else:
+              break 
+           maintainSeq = True
+           continue
+
+
+        if label == 'INCREASE':
+           if diff < 0 and diff > -4:
+              maintainSeq = True
+           else:
+              maintainSeq = False
+
+        if label == 'DECREASE':
+           if diff > 0 and diff < 4:
+              maintainSeq = True
+           else:
+              maintainSeq = False
+
+
+        if not maintainSeq:
+           break
+ 
+           
+
+
+    if maintainSeq:
+       safeCnt  = safeCnt + 1
+
+print("safeCnt:",safeCnt)
