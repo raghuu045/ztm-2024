@@ -1,0 +1,73 @@
+import sys
+
+def validateSafe(datalist):
+
+    labelList = [0]
+
+    for i in range(len(datalist)-1):
+        diff = datalist[i] - datalist[i+1]
+
+        if diff < 0 and diff > -4:
+           labelList.append('INCREASE')
+        elif diff > 0 and diff < 4:
+           labelList.append('DECREASE')
+        else:
+           labelList.append('OUTLIAR')
+
+
+    labelIndexdict = {'INCREASE': [], 'DECREASE': [], 'OUTLIAR': []}
+    labelIndexcnt = {'INCREASE': 0, 'DECREASE': 0, 'OUTLIAR': 0}
+
+    for j in range(len(labelList)):
+        if labelList[j] == 'INCREASE':
+           labelIndexdict['INCREASE'].append(j)
+           labelIndexcnt['INCREASE'] += 1
+        elif labelList[j] == 'DECREASE':
+           labelIndexdict['DECREASE'].append(j)
+           labelIndexcnt['DECREASE'] += 1
+        elif labelList[j] == 'OUTLIAR':
+           labelIndexdict['OUTLIAR'].append(j)
+           labelIndexcnt['OUTLIAR'] += 1
+
+
+
+    if (labelIndexcnt['OUTLIAR'] + labelIndexcnt['INCREASE'] == 0 ) or (labelIndexcnt['OUTLIAR'] + labelIndexcnt['DECREASE'] == 0 ):
+       return("safe")
+
+
+
+file1 = open("input.txt", "r") 
+data=file1.readlines()
+
+safeCnt = 0
+maintainSeq = False
+
+for line in data:
+    dataArray=line.strip().split(' ')
+    datalist = [ int(x) for x in dataArray] 
+
+    ## Only 1 or 2 levels in the record
+    if len(datalist) < 3: 
+       safeCnt += 1
+       continue 
+
+    ## Check using all the levels in the record
+    result = validateSafe(datalist) 
+    if result:
+       safeCnt += 1
+       continue 
+
+
+    datalistSave = datalist.copy()
+
+    ## Remove only one level in roundrobin fashion to validate if it is safe now
+    for k in range(len(datalist)):
+        datalist = datalistSave.copy()
+        del datalist[k]
+        result = validateSafe(datalist)
+        if result:
+           safeCnt += 1
+           break
+
+
+print("safeCnt:",safeCnt)
