@@ -1,0 +1,50 @@
+import sys
+file1 = open("input_section1.txt", "r") 
+data=file1.readlines()
+
+
+def findmultipleoccurrence(string,substring):
+    occurrences = []
+    start = 0
+
+    while True: 
+       start = string.find(substring, start)
+
+       if start == -1:
+          break
+
+       occurrences.append(start)
+       start += 1
+    return occurrences
+
+
+totalValue = 0 
+
+for line in data:
+
+    listmulOccurrence = findmultipleoccurrence(line, 'mul')
+
+    #print("listmulOccurrence:",listmulOccurrence)
+
+    for position in listmulOccurrence:
+        mulString = line[position:position + 12]
+
+        rightbraceposition = mulString.find(')')
+        leftbraceposition  = mulString.find('mul(')
+
+        if rightbraceposition == -1 or leftbraceposition == -1: 
+           continue
+
+        numbers = mulString[leftbraceposition + 4: rightbraceposition]
+        numbersList = numbers.split(',')
+
+        if len(numbersList) != 2:
+           continue 
+
+        xvalue = numbersList[0]
+        yvalue = numbersList[1]
+
+        if xvalue.isdigit() and yvalue.isdigit():
+           totalValue = totalValue + int(xvalue) * int(yvalue) 
+        
+print("totalValue:",totalValue)
