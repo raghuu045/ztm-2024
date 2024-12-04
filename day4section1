@@ -1,0 +1,78 @@
+import sys
+
+array2D = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2D.append(line.split(' '))
+
+
+print(len(array2D))
+
+sample = []
+
+for i in range(len(array2D)):
+
+    sample.append(array2D[i][0].strip())
+
+## look for XMAS
+
+numofString = 0 
+columnLength = len(sample)
+
+rowId = 0
+
+for element in sample:
+
+    rowLength = len(element)
+ 
+    for i in range(len(element)):
+        
+        if element[i] == "X":
+
+           ##print("here::",i,i+4,i-3)
+           ##print(element[i-3:i+1])
+
+           ## Horizontal
+           if i+4 <= rowLength and  element[i:i+4] == "XMAS"  :
+              numofString += 1
+         
+           ## Horizontal reverse
+           if i-3 > -1 and element[i-3:i+1] == "SAMX":
+              numofString += 1
+
+
+           ## DOWN
+           if rowId+4 <= columnLength and sample[rowId][i]+sample[rowId+1][i]+sample[rowId+2][i]+sample[rowId+3][i] == "XMAS":
+              numofString += 1
+
+           ## UP
+           if rowId-3 > -1 and sample[rowId-3][i]+sample[rowId-2][i]+sample[rowId-1][i]+sample[rowId][i] == "SAMX":
+              numofString += 1
+
+
+           ## Right down 
+           if rowId+4 <= columnLength and i+4 <= rowLength and sample[rowId][i]+sample[rowId+1][i+1]+sample[rowId+2][i+2]+sample[rowId+3][i+3] == "XMAS":
+              numofString += 1
+
+           ## Left UP 
+           if rowId-3 > -1 and i-3 > -1 and sample[rowId-3][i-3]+sample[rowId-2][i-2]+sample[rowId-1][i-1]+sample[rowId][i] == "SAMX":
+              numofString += 1
+
+
+           ### Left down
+           if rowId+4 <= columnLength and i-3 > -1 and sample[rowId][i]+sample[rowId+1][i-1]+sample[rowId+2][i-2]+sample[rowId+3][i-3] == "XMAS":
+              numofString += 1
+
+           ## Right up 
+           if rowId-3 > -1 and i+4 <= rowLength and sample[rowId-3][i+3]+sample[rowId-2][i+2]+sample[rowId-1][i+1]+sample[rowId][i] == "SAMX":
+              numofString += 1
+
+
+
+
+    rowId += 1
+
+
+
+print("numofString:",numofString)
