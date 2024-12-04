@@ -1,0 +1,87 @@
+import sys
+file1 = open("input.txt", "r") 
+data=file1.readlines()
+
+
+def findmultipleoccurrence(string,substring):
+    occurrences = []
+    start = 0
+
+    while True: 
+       start = string.find(substring, start)
+
+       if start == -1:
+          break
+
+       occurrences.append(start)
+       start += 1
+    return occurrences
+
+
+totalValue = 0 
+
+currentlyEnabled = "DO"
+
+for line in data:
+
+    i = 0 ## for scanning 
+
+    listmulOccurrence  = findmultipleoccurrence(line, 'mul')
+
+    listdoOccurrence   = findmultipleoccurrence(line, 'do()')
+
+    listdontOccurrence = findmultipleoccurrence(line, "don't()")
+
+
+    lenlistdoOccurrence = len(listdoOccurrence)
+    lenlistdontOccurrence = len(listdontOccurrence)
+
+
+    dodontdict = {}
+
+    for x in range(len(listdoOccurrence)):
+        dodontdict[listdoOccurrence[x]] = 'DO'
+
+
+    for x in range(len(listdontOccurrence)):
+        dodontdict[listdontOccurrence[x]] = 'DONT'
+
+
+    myKeys = list(dodontdict.keys())
+
+    myKeys.sort()
+
+
+
+    for position in listmulOccurrence:
+
+        if i < len(myKeys):
+           if position > myKeys[i]:
+              currentlyEnabled = dodontdict[myKeys[i]]
+              i +=1 
+                 
+
+        if currentlyEnabled == "DONT":
+           continue
+        
+        mulString = line[position:position + 12]
+
+        rightbraceposition = mulString.find(')')
+        leftbraceposition  = mulString.find('mul(')
+
+        if rightbraceposition == -1 or leftbraceposition == -1: 
+           continue
+
+        numbers = mulString[leftbraceposition + 4: rightbraceposition]
+        numbersList = numbers.split(',')
+
+        if len(numbersList) != 2:
+           continue 
+
+        xvalue = numbersList[0]
+        yvalue = numbersList[1]
+
+        if xvalue.isdigit() and yvalue.isdigit():
+           totalValue = totalValue + int(xvalue) * int(yvalue) 
+
+print("totalValue:",totalValue)
