@@ -1,0 +1,61 @@
+import sys
+
+array2D = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2D.append(line.split(' '))
+
+
+print(len(array2D))
+
+sample = []
+
+for i in range(len(array2D)):
+
+    sample.append(array2D[i][0].strip())
+
+## look for MAS as X shape
+'''
+M.S
+.A.
+M.S
+'''
+
+numofString = 0 
+columnLength = len(sample)
+
+rowId = 0
+
+for element in sample:
+
+    rowLength = len(element)
+ 
+    for i in range(len(element)):
+
+        rightLeft = '' 
+        leftRight = ''
+        
+        if element[i] == "A":
+
+           ##print("here::",i,i+4,i-3)
+           ##print(element[i-3:i+1])
+
+           ## Right down 
+           ## Left UP 
+           if ((rowId+2 <= columnLength and i+2 <= rowLength and sample[rowId+1][i+1] == "S") and (rowId-1 > -1 and i-1 > -1 and sample[rowId-1][i-1] == "M")) or ((rowId+2 <= columnLength and i+2 <= rowLength and sample[rowId+1][i+1] == "M") and (rowId-1 > -1 and i-1 > -1 and sample[rowId-1][i-1] == "S")):
+              rightLeft = "YES"
+
+
+
+           ### Left down
+           ## Right up 
+           if ((rowId+2 <= columnLength and i-1 > -1 and sample[rowId+1][i-1] == "S") and (rowId-1 > -1 and i+2 <= rowLength and sample[rowId-1][i+1] == "M")) or ((rowId+2 <= columnLength and i-1 > -1 and sample[rowId+1][i-1] == "M") and (rowId-1 > -1 and i+2 <= rowLength and sample[rowId-1][i+1] == "S")):
+              leftRight = "YES"
+
+           if rightLeft and leftRight:
+              numofString += 1 
+
+    rowId += 1
+
+print("numofString:",numofString)
