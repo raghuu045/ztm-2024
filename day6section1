@@ -1,0 +1,93 @@
+import sys
+
+array2DX = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2DX.append(line.strip())
+
+array2D = []
+
+for i in range(len(array2DX)):
+    temp = []
+    for j in range(len(array2DX[0])):
+        temp.append(array2DX[i][j])
+    array2D.append(temp)
+
+
+rowLength = len(array2D)
+colLength = len(array2D[0])
+
+##Identify starting point 
+
+FOUNDSTART = False
+
+for i in range(rowLength):
+    for j in range(colLength):
+        if array2D[i][j] == "^":
+           startRow,startCol = i,j
+           FOUNDSTART = True
+           break
+    if FOUNDSTART:
+       break 
+
+
+### instruct how to navigate 
+navigation = ['UP','RIGHT','DOWN','LEFT']
+
+navLength = len(navigation)
+
+rowMove = startRow
+colMove = startCol
+navIndicator = 0
+
+totalpositions = 1
+## Mark foot print on the starting point 
+array2D[rowMove][colMove] = "X"
+
+while rowMove != rowLength:
+
+      if navIndicator == navLength:
+         navIndicator  = 0
+
+      if navigation[navIndicator] == "UP":
+         rowMove -= 1
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            rowMove +=1
+            continue
+
+      if navigation[navIndicator] == "RIGHT":
+         colMove += 1
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            colMove -= 1
+            continue
+
+
+      if navigation[navIndicator] == "DOWN":
+         rowMove += 1
+         if rowMove == rowLength:
+            break
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            rowMove -= 1
+            continue
+
+
+      if navigation[navIndicator] == "LEFT":
+         colMove -= 1
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            colMove += 1
+            continue
+
+      if array2D[rowMove][colMove] != "X":
+         ## count the step if there is no foot print already
+         totalpositions +=1
+         ## mark foot print as you tranverse
+         array2D[rowMove][colMove] = "X" 
+
+print("totalpositions:",totalpositions)
+
+sys.exit()
