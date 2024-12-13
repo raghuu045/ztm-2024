@@ -1,0 +1,42 @@
+import itertools,sys
+
+array2DX = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2DX.append(line.strip().split(':'))
+
+dataDict = {} 
+
+for i in range(len(array2DX)):
+    dataDict[array2DX[i][0]] = array2DX[i][1].split(' ')
+
+
+finalTotal = 0
+
+for key,value in dataDict.items():
+
+    n = len(value)-2
+    lst = [list(i) for i in itertools.product([0, 1,2], repeat=n)]
+
+    for seq in lst:
+        j = 2
+        firstValue  = value[1]
+        totalValue  = firstValue
+
+        for x in seq:
+            secondValue = value[j]
+            if x == 0:
+               totalValue = int(totalValue) * int(secondValue)
+            elif x == 1:
+               totalValue = int(totalValue) + int(secondValue) 
+            else:
+               totalValue  = str(totalValue) + str(secondValue)
+            j +=1 
+
+
+        if int(totalValue) == int(key):
+           finalTotal += int(key)
+           break
+             
+print("finalTotal:",finalTotal)
