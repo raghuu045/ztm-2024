@@ -1,0 +1,127 @@
+import sys
+
+
+def simulateloop(navIndicator,rowMove,colMove):
+    global navigation, array2D, navLength,rowLength,colLength
+
+    currrowMove = rowMove
+    currcolMove = colMove
+
+    avoidLooping = []
+
+    while rowMove > 0 and rowMove < rowLength-1 and colMove > 0 and colMove < colLength -1:
+
+      if navIndicator == navLength:
+         navIndicator  = 0
+
+      avoidLooping.append([rowMove,colMove,navigation[navIndicator]])   
+
+      if navigation[navIndicator] == "UP":
+         rowMove -= 1
+         if rowMove < 0:
+            break 
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            rowMove +=1
+            continue
+
+      if navigation[navIndicator] == "RIGHT":
+         colMove += 1
+         if colMove == colLength:
+            break
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            colMove -= 1
+            continue
+
+
+      if navigation[navIndicator] == "DOWN":
+         rowMove += 1
+         if rowMove == rowLength:
+            break
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            rowMove -= 1
+            continue
+
+
+      if navigation[navIndicator] == "LEFT":
+         colMove -= 1
+         if colMove < 0:
+            break
+         if array2D[rowMove][colMove] == "#":
+            navIndicator +=1
+            colMove += 1
+            continue
+
+      if [rowMove,colMove,navigation[navIndicator]] in avoidLooping:
+         return True
+
+    return False  
+
+
+    
+array2DX = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2DX.append(line.strip())
+
+array2D = []
+
+for i in range(len(array2DX)):
+    temp = []
+    for j in range(len(array2DX[0])):
+        temp.append(array2DX[i][j])
+    array2D.append(temp)
+
+
+rowLength = len(array2D)
+colLength = len(array2D[0])
+
+print(rowLength,colLength)
+
+##Identify starting point 
+
+FOUNDSTART = False
+
+for i in range(rowLength):
+    for j in range(colLength):
+        if array2D[i][j] == "^":
+           startRow,startCol = i,j
+           FOUNDSTART = True
+           break
+    if FOUNDSTART:
+       break 
+
+
+### instruct how to navigate 
+navigation = ['UP','RIGHT','DOWN','LEFT']
+
+navLength = len(navigation)
+
+loopCnt = 0
+
+for x in range(len(array2D)):
+  for y in range(len(array2D[0])):
+
+    if array2D[x][y] == "#" or (x,y) == (startRow,startCol):
+       continue 
+
+    rowMove = startRow
+    colMove = startCol
+    navIndicator = 0
+
+    ## Set the barricade 
+    array2D[x][y] = '#' 
+
+    if simulateloop(navIndicator,rowMove,colMove): 
+       loopCnt += 1
+
+    ## Remove the barricade
+    array2D[x][y] = '.'
+
+
+print("loopCnt:",loopCnt)
+
+sys.exit()
