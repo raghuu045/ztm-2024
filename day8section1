@@ -1,0 +1,62 @@
+import itertools,sys
+
+
+def addPositions(pos1, pos2):
+    return (pos1[0] + pos2[0], pos1[1] + pos2[1])
+
+def subtractPositions(pos1, pos2):
+    return (pos1[0] - pos2[0], pos1[1] - pos2[1])
+
+
+array2DX = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2DX.append(line.strip())
+
+
+array2D = []
+
+for i in range(len(array2DX)):
+    temp = []
+    for j in range(len(array2DX[0])):
+        temp.append(array2DX[i][j])
+    array2D.append(temp)
+
+rowLength = len(array2D)
+colLength = len(array2D[0])
+
+print(rowLength,colLength)
+
+
+dataDict = {} 
+
+for i in range(len(array2D)):
+    for j in range(len(array2D[i])):
+        if not (array2D[i][j].isdigit() or array2D[i][j].isalpha()):
+           continue
+         
+        if array2D[i][j] in dataDict:
+           dataDict[array2D[i][j]].append((i,j))
+        else:
+           dataDict[array2D[i][j]] = [(i,j)]
+  
+
+## Removes any duplicate positions 
+antiNodes = set()
+
+for key,value in dataDict.items():
+
+    for pos in dataDict[key]:
+        for posNext in dataDict[key]:
+            if pos == posNext:
+               continue
+
+            res = subtractPositions(pos, posNext)  
+            antiNodePos = addPositions(pos, res) 
+
+            if 0 <= antiNodePos[0] < rowLength and 0 <= antiNodePos[1] < colLength:
+               antiNodes.add(antiNodePos)
+
+print("antiNodeCnt:",len(antiNodes))
+sys.exit()
