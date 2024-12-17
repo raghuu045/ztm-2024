@@ -1,0 +1,79 @@
+import itertools,sys
+
+array2DX = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2DX.append(line.strip())
+
+
+array2D = []
+
+for i in range(len(array2DX)):
+    temp = []
+    for j in range(len(array2DX[0])):
+        temp.append(array2DX[i][j])
+    array2D.append(temp)
+
+
+data = array2D[0]
+
+dataList = []
+
+file = True
+k = 0
+for i in range(len(data)):
+    for j in range(int(data[i])):
+        if file: 
+           dataList.append(str(k))
+        else: 
+           dataList.append('.')
+
+    if file:
+       file = False
+       k += 1
+    else:
+       file = True
+
+
+dataLength = len(dataList)
+j = 0
+totalValue = 0
+for i in range(dataLength-1, 0, -1):
+
+    if dataList[i] == '.':
+       continue
+
+    while dataList[j] != '.': 
+
+          j += 1
+          if j > i:
+             break
+
+    if j > i :
+       break
+
+    dataList[j] = dataList[i] 
+
+    dataList[i] = '.'
+    
+    j += 1
+
+    if j > dataLength:
+       break
+
+
+
+for i in range(dataLength):
+
+    if dataList[i] == '.':
+
+       break
+
+    totalValue += i * int(dataList[i])
+  
+
+print("totalValue:",totalValue)
+
+
+sys.exit()
