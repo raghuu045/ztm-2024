@@ -1,0 +1,91 @@
+import sys
+import datetime
+
+array2DX = []
+
+with open('input.txt', 'r') as f:
+        for line in f.readlines():
+            array2DX.append(line.strip())
+
+
+array2D = []
+
+for i in range(len(array2DX)):
+    temp = []
+    for j in range(len(array2DX[0])):
+        temp.append(array2DX[i][j])
+    array2D.append(temp)
+
+
+data = array2D[0]
+
+dataList = []  ## Create the list with spaces and values
+fileDict = {}  ## Create dict using the start position and length of each file
+spaceDict = {} ## Create dict using the start position and length of each space
+
+file = True
+k = 0
+startingPointTracking = 0
+
+for i in range(len(data)):
+    if file:
+       fileDict[startingPointTracking] = int(data[i])
+    else:
+       spaceDict[startingPointTracking] = int(data[i])
+    for j in range(int(data[i])):
+        if file: 
+           dataList.append(str(k))
+        else: 
+           dataList.append('.')
+
+    if file:
+       file = False
+       k += 1
+    else:
+       file = True
+
+    startingPointTracking += int(data[i])
+
+
+
+dataLength = len(dataList)
+
+spaceDictPrev = spaceDict
+
+for fileIndex,fileValue in reversed(fileDict.items()):
+
+    now = datetime.datetime.now()
+     
+    spaceDict  = spaceDictPrev 
+
+    for spaceIndex, spaceValue in sorted(spaceDict.items()):
+
+
+        if spaceIndex > fileIndex:
+           break
+
+        if spaceValue >= fileValue:
+           dataList[int(spaceIndex):int(spaceIndex)+int(fileValue)] = dataList[int(fileIndex):int(fileIndex)+int(fileValue)]  ## Move the file to empty space infront
+
+           dataList[int(fileIndex):int(fileIndex)+int(fileValue)] = '.' * int(fileValue)  ## Fill the moved file location with spaces 
+
+           del spaceDict[spaceIndex]  ## Delete the space position which was filled with the moved file
+
+           spaceDict[spaceIndex + fileValue ] = spaceValue - fileValue  ## Create the new space position adjusted for the file moved to the space
+           break
+
+
+totalValue = 0
+
+for i in range(dataLength):
+
+    if dataList[i] == '.':
+       continue
+
+    totalValue += i * int(dataList[i]) ## calculate the value based on the position of the file. 
+
+
+print("totalValue:",totalValue)
+
+
+sys.exit()
